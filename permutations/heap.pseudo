@@ -1,0 +1,14 @@
+HEAP'S ALGORITHM
+Source: https://webcms3.cse.unsw.edu.au/COMP9021/15s2/resources/1544
+
+permute(array, prefixLength):
+    if (prefixLength == 1):
+        # Consume permutation in array
+    else:
+        permute(array, prefixLength - 1)
+        for i in [0, prefixLength - 2]
+            if prefixLength even:
+                swap(array, i, prefixLength)
+            else:
+                swap(array, 0, prefixLength)
+            permute(array, prefixLength - 1)
