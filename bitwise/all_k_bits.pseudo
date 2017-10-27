@@ -1,0 +1,23 @@
+ENUMERATE ALL STRINGS OF k BITS OF LENGTH n
+
+S = (1 << k) - 1
+while S < (1 << N):
+	# Use S
+
+	if S == 0: break # Handle case when k = 0
+
+	low_order_bit = S & -S;
+	carried = S + low_order_bit
+	carry_portion = S ^ carried
+	shifted = carry_portion / low_order_bit / 4
+	S = carried | shifted
+
+IN SHORT FORM
+
+S = (1 << k) - 1
+while S < (1 << N):
+	# Use S
+
+	if S == 0: break
+	a = S & -S; b = S + a
+	S = (S ^ b) / 4 / a | b
