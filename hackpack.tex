@@ -1,0 +1,47 @@
+\documentclass[8pt]{extarticle}
+
+\usepackage[margin=.2in,top=.3in,bottom=.3in,footskip=.1in,headsep=0pt,landscape]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+
+\fancyhf{}
+\fancyhead[L]{\rightmark}
+\fancyhead[R]{\leftmark}
+\fancyhead[C]{Carnegie Mellon University}
+\fancyfoot[R]{\thepage}
+\fancyfoot[L]{\thepage}
+\pagestyle{fancy}
+
+\renewcommand{\headrulewidth}{0pt}
+
+\lstset{
+	basicstyle=\footnotesize\ttfamily,
+	identifierstyle=,
+	commentstyle=\itshape,
+	keywordstyle=\color{blue},
+	tabsize=2,
+	breaklines=true,
+	showspaces=false,
+	showstringspaces=false,
+	basewidth=.43em,
+	frame=single,
+	framesep=1pt,
+	aboveskip=0pt,
+	belowskip=0pt,
+	abovecaptionskip=0pt,
+	belowcaptionskip=3pt,
+}
+
+\newcommand{\hackpacklisting}[2]{\markboth{#2}{#2}
+\lstinputlisting[language=#1,title=#2]{#2}\markboth{#2}{#2}}
+
+\setlength{\columnsep}{4pt}
+\begin{document}
+\begin{multicols}{3}
+\input{hackpack-sources}
+\end{multicols}
+\end{document}
