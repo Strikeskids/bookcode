@@ -3,7 +3,7 @@
 default: hackpack.pdf
 all: output.pdf hackpack.pdf
 
-CXXFLAGS ?= -Wall -O2 --std=c++11
+CXXFLAGS ?= -Wall -O2 --std=gnu++14
 
 output.pdf:
 	enscript **/{*.pseudo,*.java} -f 'Courier-Bold8' -2 -j -T 2 -r -o - | ps2pdf - output.pdf
