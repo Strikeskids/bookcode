@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class DinicsBetter {
+public class Dinics {
 	static final long INFTY = Long.MAX_VALUE/2;
 	static int round;
 
