@@ -180,11 +180,37 @@ void test_factor() {
 	}
 }
 
+void bench_factor(ll upper, ll rounds) {
+	map<ll, int> factors;
+	mt19937 gen;
+	uniform_int_distribution<ll> dist(1, upper);
+	auto t1 = chrono::high_resolution_clock::now();
+	for (ll i = 0; i < rounds; ++i) {
+		factors.clear();
+		factor(dist(gen), factors);
+	}
+	auto t2 = chrono::high_resolution_clock::now();
+	printf("Factored %lld uniform values from [1, %g] in %lldms\n", rounds, (double)upper,
+		chrono::duration_cast<chrono::milliseconds>(t2 - t1).count());
+	uniform_int_distribution<ll> primes(1, sqrt(upper));
+	t1 = chrono::high_resolution_clock::now();
+	for (ll i = 0; i < rounds; ++i) {
+		factors.clear();
+		factor(primes(gen) * primes(gen), factors);
+	}
+	t2 = chrono::high_resolution_clock::now();
+	printf("Factored %lld PQ values from [1, %g] in %lldms\n", rounds, (double)upper,
+		chrono::duration_cast<chrono::milliseconds>(t2 - t1).count());
+}
+
 int main() {
 	init_sieve();
 	test_modarith();
 	test_isprime();
 	test_factor();
 	bench_modmul(95552340254460888LL, 872701323326370208LL, 2417744585500243676LL);
+	bench_factor(1e12, 1e4);
+	bench_factor(1e15, 1e4);
+	bench_factor(1e18, 1e4);
 	return 0;
 }

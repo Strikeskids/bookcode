@@ -60,6 +60,7 @@ bool isprime(ll n) {
 	return n>1&&miller_rabin(n);
 }
 
+/* Expect <= .5ms each for uniform n */
 ll pollard_rho(ll n) {
 	// assert(n > 1 && !isprime(n));
 	if (!(n&1)) return 2;
