@@ -45,8 +45,8 @@ public class TestDinics {
 		pw.println(lo);
 
 		for (Node p : pairs) {
-			Edge a = p.edges.get(0);
-			Edge b = p.edges.get(1);
+			Edge a = p.es.get(0);
+			Edge b = p.es.get(1);
 			if (b.cap(p) == 1) {
 				Edge tmp = a;
 				a = b;
@@ -63,9 +63,9 @@ public class TestDinics {
 	static long limit(Node S, Node[] sts, int cap) {
 		long decrease = 0;
 		for (Node n : sts) {
-			Edge root = n.edges.get(0);
+			Edge root = n.es.get(0);
 			long total = root.cap(n);
-			for (Edge e : n.edges) {
+			for (Edge e : n.es) {
 				if (total <= cap)
 					break;
 				Node pair = e.opp(n);
@@ -75,7 +75,7 @@ public class TestDinics {
 					// pull from sink
 					root.pull(S, 1);
 					e.pull(n, 1);
-					pair.edges.get(2).pull(pair, 1);
+					pair.es.get(2).pull(pair, 1);
 					total--;
 					decrease++;
 				}
@@ -147,11 +147,11 @@ public class TestDinics {
 		S.cap = INFTY;
 		S.prev = null;
 
-		for (Node n = S; !n.levelEdges.isEmpty() || n.prev != null;) {
+		for (Node n = S; !n.le.isEmpty() || n.prev != null;) {
 			// If at the sink, we can consume all of the flow
 			if (n == T) n.pushed = n.cap;
 
-			if (n.levelEdges.isEmpty() || n.cap == n.pushed) {
+			if (n.le.isEmpty() || n.cap == n.pushed) {
 				// If we've saturated a node or run out of edges, finish the node
 				Edge e = n.prev;
 				Node p = e.opp(n);
@@ -161,13 +161,13 @@ public class TestDinics {
 				p.pushed += n.pushed;
 
 				// If we haven't saturated the edge, add it back to the parents's list
-				if (!n.levelEdges.isEmpty() && e.cap(p) > 0)
-					p.levelEdges.addLast(e);
+				if (!n.le.isEmpty() && e.cap(p) > 0)
+					p.le.addLast(e);
 
 				n = p;
 			} else {
 				// We've still got more flow to push and edges to examine
-				Edge e = n.levelEdges.pollLast();
+				Edge e = n.le.pollLast();
 				Node c = e.opp(n);
 				if (c != T && c.level >= T.level) continue;
 				if (c.level != n.level+1) throw new RuntimeException();
@@ -205,8 +205,8 @@ public class TestDinics {
 
 			int level = n.level;
 
-			n.levelEdges.clear();
-			for (Edge e : n.edges) {
+			n.le.clear();
+			for (Edge e : n.es) {
 				if (e.cap(n) == 0)
 					continue;
 				
@@ -221,7 +221,7 @@ public class TestDinics {
 
 				// If the node is on the next level, enable the edge to be used
 				if (a.level == level + 1) {
-					n.levelEdges.addLast(e);
+					n.le.addLast(e);
 				}
 			}
 		}
@@ -229,18 +229,18 @@ public class TestDinics {
 
 	static class Node {
 		int id, round, level;
-		Deque<Edge> levelEdges = new ArrayDeque<>();
+		Deque<Edge> le = new ArrayDeque<>(); // levelEdges
 
 		long cap, pushed;
 		Edge prev;
 
-		List<Edge> edges = new ArrayList<>();
+		List<Edge> es = new ArrayList<>();
 
 		Node(int i) { id = i; }
 
 		void connect(Node dst, long fwd, long bwd) {
 			Edge e = new Edge(this, dst, fwd, bwd);
-			edges.add(e); dst.edges.add(e);
+			es.add(e); dst.es.add(e);
 		}
 	}
 

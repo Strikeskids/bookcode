@@ -4,6 +4,7 @@ public class Dinics {
 	static final long INFTY = Long.MAX_VALUE/2;
 	static int round;
 
+	/* Returns new flow pushed within the flow graph */
 	static long dinics(Node S, Node T) {
 		long flow = 0, currentFlow;
 		do {
@@ -19,17 +20,17 @@ public class Dinics {
 	 * in prev edge pointers on each node.
 	 */
 	static long blockingFlow(Node S, Node T) {
+		if (T.round != round) return 0;
+
 		S.pushed = 0;
 		S.cap = INFTY;
 		S.prev = null;
 
-		for (Node n = S; !n.levelEdges.isEmpty() || n.prev != null;) {
-			if (n == T) {
-				// If at the sink, we can consume all of the flow
-				n.pushed = n.cap;
-			}
+		for (Node n = S; !n.le.isEmpty() || n.prev != null;) {
+			// If at the sink, we can consume all of the flow
+			if (n == T) n.pushed = n.cap;
 
-			if (n.levelEdges.isEmpty() || n.cap == n.pushed) {
+			if (n.le.isEmpty() || n.cap == n.pushed) {
 				// If we've saturated a node or run out of edges, finish the node
 				Edge e = n.prev;
 				Node p = e.opp(n);
@@ -39,14 +40,16 @@ public class Dinics {
 				p.pushed += n.pushed;
 
 				// If we haven't saturated the edge, add it back to the parents's list
-				if (e.cap(p) > 0)
-					p.levelEdges.addLast(e);
+				if (!n.le.isEmpty() && e.cap(p) > 0)
+					p.le.addLast(e);
 
 				n = p;
 			} else {
 				// We've still got more flow to push and edges to examine
-				Edge e = n.levelEdges.pollLast();
+				Edge e = n.le.pollLast();
 				Node c = e.opp(n);
+				if (c != T && c.level >= T.level) continue;
+				if (c.level != n.level+1) throw new RuntimeException();
 
 				// Recurse into the child, seeking to push flow from it
 				c.cap = Math.min(n.cap - n.pushed, e.cap(n));
@@ -77,10 +80,12 @@ public class Dinics {
 		open.addLast(S);
 		while (!open.isEmpty()) {
 			Node n = open.pollFirst();
+			if (n == T) break; // optimization
 
 			int level = n.level;
 
-			for (Edge e : n.edges) {
+			n.le.clear();
+			for (Edge e : n.es) {
 				if (e.cap(n) == 0)
 					continue;
 				
@@ -94,8 +99,8 @@ public class Dinics {
 				}
 
 				// If the node is on the next level, enable the edge to be used
-				if (a.round == round && a.level == level + 1) {
-					n.levelEdges.addLast(e);
+				if (a.level == level + 1) {
+					n.le.addLast(e);
 				}
 			}
 		}
@@ -103,18 +108,18 @@ public class Dinics {
 
 	static class Node {
 		int id, round, level;
-		Deque<Edge> levelEdges = new ArrayDeque<>();
+		Deque<Edge> le = new ArrayDeque<>(); // levelEdges
 
 		long cap, pushed;
 		Edge prev;
 
-		List<Edge> edges = new ArrayList<>();
+		List<Edge> es = new ArrayList<>();
 
 		Node(int i) { id = i; }
 
 		void connect(Node dst, long fwd, long bwd) {
 			Edge e = new Edge(this, dst, fwd, bwd);
-			edges.add(e); dst.edges.add(e);
+			es.add(e); dst.es.add(e);
 		}
 	}
 
@@ -130,12 +135,14 @@ public class Dinics {
 		}
 
 		Node opp(Node n) {
-			if (n == src) return dst; else if (n == dst) return src;
+			if (n == src) return dst;
+			else if (n == dst) return src;
 			else throw new RuntimeException();
 		}
 
 		long cap(Node n) {
-			if (n == src) return fwd; else if (n == dst) return bwd;
+			if (n == src) return fwd;
+			else if (n == dst) return bwd;
 			else throw new RuntimeException();
 		}
 
