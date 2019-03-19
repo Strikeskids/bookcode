@@ -1,17 +1,9 @@
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class DinicsBetter {
-
+	static final long INFTY = Long.MAX_VALUE/2;
 	static int round;
 
-	/** Perform dinics by continually recomputing blocking flows while they exist */
 	static long dinics(Node S, Node T) {
 		long flow = 0, currentFlow;
 		do {
@@ -27,46 +19,46 @@ public class DinicsBetter {
 	 * in prev edge pointers on each node.
 	 */
 	static long blockingFlow(Node S, Node T) {
-		S.pushedForward = 0;
-		S.capacity = Long.MAX_VALUE;
+		S.pushed = 0;
+		S.cap = INFTY;
 		S.prev = null;
 
 		for (Node n = S; !n.levelEdges.isEmpty() || n.prev != null;) {
 			if (n == T) {
 				// If at the sink, we can consume all of the flow
-				n.pushedForward = n.capacity;
+				n.pushed = n.cap;
 			}
 
-			if (n.levelEdges.isEmpty() || n.capacity == n.pushedForward) {
+			if (n.levelEdges.isEmpty() || n.cap == n.pushed) {
 				// If we've saturated a node or run out of edges, finish the node
 				Edge e = n.prev;
-				Node parent = e.opp(n);
+				Node p = e.opp(n);
 
 				// Pull the flow to decrease the outgoing flow to 0 at the current node
-				e.pull(n, n.pushedForward);
-				parent.pushedForward += n.pushedForward;
+				e.pull(n, n.pushed);
+				p.pushed += n.pushed;
 
-				// If we haven't saturated the edge, add it back to the parent's list
-				if (e.cap(parent) > 0)
-					parent.levelEdges.addLast(e);
+				// If we haven't saturated the edge, add it back to the parents's list
+				if (e.cap(p) > 0)
+					p.levelEdges.addLast(e);
 
-				n = parent;
+				n = p;
 			} else {
 				// We've still got more flow to push and edges to examine
-				Edge e = n.levelEdges.pollFirst();
-				Node child = e.opp(n);
+				Edge e = n.levelEdges.pollLast();
+				Node c = e.opp(n);
 
 				// Recurse into the child, seeking to push flow from it
-				child.capacity = Math.min(n.capacity - n.pushedForward, e.cap(n));
-				child.pushedForward = 0;
-				child.prev = e;
+				c.cap = Math.min(n.cap - n.pushed, e.cap(n));
+				c.pushed = 0;
+				c.prev = e;
 
-				n = child;
+				n = c;
 			}
 		}
 
 		// Return the total flow pushed out of the source
-		return S.pushedForward;
+		return S.pushed;
 	}
 
 	/**
@@ -89,9 +81,10 @@ public class DinicsBetter {
 			int level = n.level;
 
 			for (Edge e : n.edges) {
-				Node a = e.opp(n);
 				if (e.cap(n) == 0)
 					continue;
+				
+				Node a = e.opp(n);
 
 				// If we haven't seen a node yet, add it to the queue
 				if (a.round != round) {
@@ -109,20 +102,19 @@ public class DinicsBetter {
 	}
 
 	static class Node {
-		int id;
-
-		int round;
-		int level;
+		int id, round, level;
 		Deque<Edge> levelEdges = new ArrayDeque<>();
 
-		long pushedForward;
-		long capacity;
+		long cap, pushed;
 		Edge prev;
 
 		List<Edge> edges = new ArrayList<>();
 
-		Node(int id) {
-			this.id = id;
+		Node(int i) { id = i; }
+
+		void connect(Node dst, long fwd, long bwd) {
+			Edge e = new Edge(this, dst, fwd, bwd);
+			edges.add(e); dst.edges.add(e);
 		}
 	}
 
@@ -132,83 +124,31 @@ public class DinicsBetter {
 		Node src;
 		Node dst;
 
-		public Edge(Node src, Node dst, long fwd, long bwd) {
-			super();
-			this.src = src;
-			this.dst = dst;
-			this.fwd = fwd;
-			this.bwd = bwd;
+		public Edge(Node u, Node v, long f, long b) {
+			src = u; dst = v; fwd = f; bwd = b;
+			if (src == dst || fwd < 0 || bwd < 0) throw new RuntimeException();
 		}
 
 		Node opp(Node n) {
-			if (n == src)
-				return dst;
-			else if (n == dst)
-				return src;
-			else
-				throw new RuntimeException();
+			if (n == src) return dst; else if (n == dst) return src;
+			else throw new RuntimeException();
 		}
 
 		long cap(Node n) {
-			if (n == src)
-				return fwd;
-			else if (n == dst)
-				return bwd;
-			else
-				throw new RuntimeException();
+			if (n == src) return fwd; else if (n == dst) return bwd;
+			else throw new RuntimeException();
 		}
 
 		void pull(Node n, long value) {
 			if (n == dst) {
-				if (fwd < value)
-					throw new RuntimeException();
-				fwd -= value;
-				bwd += value;
+				if (fwd < value) throw new RuntimeException();
+				fwd -= value; bwd += value;
 			} else if (n == src) {
-				if (bwd < value)
-					throw new RuntimeException();
-				bwd -= value;
-				fwd += value;
+				if (bwd < value) throw new RuntimeException();
+				bwd -= value; fwd += value;
 			} else {
 				throw new RuntimeException();
 			}
-		}
-	}
-
-	static class FastScan implements Closeable {
-		private BufferedReader br;
-		private StringTokenizer tk;
-
-		public FastScan(BufferedReader br) {
-			this.br = br;
-		}
-
-		public int in() throws NumberFormatException, IOException {
-			return Integer.parseInt(next());
-		}
-
-		public long ln() throws NumberFormatException, IOException {
-			return Long.parseLong(next());
-		}
-
-		public double db() throws NumberFormatException, IOException {
-			return Double.parseDouble(next());
-		}
-
-		@Override
-		public void close() throws IOException {
-			tk = null;
-			br.close();
-		}
-
-		public String next() throws IOException {
-			while (tk == null || !tk.hasMoreTokens()) {
-				String line = br.readLine();
-				if (line == null)
-					return null;
-				tk = new StringTokenizer(line);
-			}
-			return tk.nextToken();
 		}
 	}
 }
