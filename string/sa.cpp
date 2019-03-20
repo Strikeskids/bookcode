@@ -4,11 +4,11 @@ int sacmp(int *r,int a,int b,int l) {
 	return r[a]==r[b]&&r[a+l]==r[b+l];
 }
 
-// input: r: array of length n, 0 <= r_i < m, r[n] = -1
+// input: r: array of length n, 0 <= r_i < m, r_n < 0
 // output: sa: suffix array (suffixes sorted lexicographically)
 void compute_sa(int n,int m,int *r,int *sa) {
 	int i,j,p,*x=wa,*y=wb,*t;
-	assert(n<maxn&&m<maxn);
+	assert(n<maxn&&m<maxn&&r[n]<0);
 	for(i=0;i<n;++i) assert(r[i]<m);
 	for(i=0;i<m;i++) ws[i]=0;
 	for(i=0;i<n;i++) ws[x[i]=r[i]]++;
