@@ -2,12 +2,12 @@ typedef long long ll;
 
 /* 1.5x faster than modmul2 */
 ll modmul(ll a, ll b, ll m) {
-	// assert(0 <= a && a < m && 0 <= b && b < m);
+	assert(0 <= a && a < m && 0 <= b && b < m);
 	return (a*b-(ll)(a/(long double)m*b+1e-3)*m+m)%m;
 }
 
 ll modmul2(ll a, ll b, ll m) {
-	// assert(0 <= a && a < m && 0 <= b && b < m);
+	assert(0 <= a && a < m && 0 <= b && b < m);
 	ll result, quot;
 	__asm__ (
 		"imulq %[op2]; idivq %[modulus]"
@@ -62,9 +62,9 @@ bool isprime(ll n) {
 
 /* Expect <= .5ms each for uniform n */
 ll pollard_rho(ll n) {
-	// assert(n > 1 && !isprime(n));
+	assert(n > 1 && !isprime(n));
 	if (!(n&1)) return 2;
-	uniform_int_distribution<ll> params(1, n);
+	uniform_int_distribution<ll> params(1, n-1);
 	ll c = params(gen), x = params(gen), y = x, d;
 	do {
 		x = (modmul(x, x, n) + c) % n;

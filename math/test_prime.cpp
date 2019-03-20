@@ -9,6 +9,7 @@
 using namespace std;
 
 #include "prime.cpp"
+#include "egcd.cpp"
 
 const ll ITERATIONS = 100000000;
 
@@ -193,24 +194,47 @@ void bench_factor(ll upper, ll rounds) {
 	printf("Factored %lld uniform values from [1, %g] in %lldms\n", rounds, (double)upper,
 		chrono::duration_cast<chrono::milliseconds>(t2 - t1).count());
 	uniform_int_distribution<ll> primes(1, sqrt(upper));
-	t1 = chrono::high_resolution_clock::now();
+	vector<ll> tests;
 	for (ll i = 0; i < rounds; ++i) {
+		ll p, q;
+		do { p = primes(gen); } while (!isprime(p));
+		do { q = primes(gen); } while (!isprime(q));
+		tests.push_back(p*q);
+	}
+	t1 = chrono::high_resolution_clock::now();
+	for (auto n : tests) {
 		factors.clear();
-		factor(primes(gen) * primes(gen), factors);
+		factor(n, factors);
 	}
 	t2 = chrono::high_resolution_clock::now();
 	printf("Factored %lld PQ values from [1, %g] in %lldms\n", rounds, (double)upper,
-		chrono::duration_cast<chrono::milliseconds>(t2 - t1).count());
+		chrono::duration_cast<chrono::milliseconds>(t2-t1).count());
+}
+
+void test_egcd() {
+	mt19937 gen;
+	uniform_int_distribution<ll> dist(1, 1e12);
+	for (ll i = 0; i < 10000; ++i) {
+		ll n = dist(gen), m = dist(gen), g, a, b;
+		tie(g, a, b) = egcd(n, m);
+		assert(g == gcd(n, m));
+		assert(abs(a) < m && abs(b) < n);
+		assert(a*n + b*m == g);
+	}
 }
 
 int main() {
+#ifndef NDEBUG
 	init_sieve();
 	test_modarith();
 	test_isprime();
 	test_factor();
+	test_egcd();
+#else
 	bench_modmul(95552340254460888LL, 872701323326370208LL, 2417744585500243676LL);
 	bench_factor(1e12, 1e4);
 	bench_factor(1e15, 1e4);
 	bench_factor(1e18, 1e4);
+#endif
 	return 0;
 }
