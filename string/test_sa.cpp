@@ -7,6 +7,12 @@ const int maxn = 1000;
 #include "sa.cpp"
 
 const char *CASES[] = {
+	"ab",
+	"aa",
+	"aaa",
+	"aaab",
+	"aaaa",
+	"aaaaa",
 	"abacaba",
 	"abacadabra",
 	"cabaccbabcaacbbccbacbcbccbbaaababaabbcbcccabccacaccabccbaacaababcbcbbcbcbbababbccaacbabaacbccbcbaaca",
