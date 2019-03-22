@@ -1,4 +1,5 @@
-int wa[maxn],wb[maxn],wv[maxn],ws[maxn]; // set maxn with +1 extra
+// set maxn with +1 extra
+int wa[maxn],wb[maxn],wv[maxn],ws[maxn]; // temporaries
 
 int sacmp(int *r,int a,int b,int l) {
 	return r[a]==r[b]&&r[a+l]==r[b+l];
