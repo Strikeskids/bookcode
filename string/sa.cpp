@@ -1,5 +1,5 @@
-// set maxn with +1 extra
-int wa[maxn],wb[maxn],wv[maxn],ws[maxn]; // temporaries
+// set MAXN with +1 extra
+int wa[MAXN],wb[MAXN],wv[MAXN],ws[MAXN]; // temporaries
 
 int sacmp(int *r,int a,int b,int l) {
 	return r[a]==r[b]&&r[a+l]==r[b+l];
@@ -9,7 +9,7 @@ int sacmp(int *r,int a,int b,int l) {
 // output: sa: suffix array (suffixes sorted lexicographically)
 void compute_sa(int n,int m,int *r,int *sa) {
 	int i,j,p,*x=wa,*y=wb,*t;
-	assert(n<maxn&&m<maxn&&r[n]<0);
+	assert(n<MAXN&&m<MAXN&&r[n]<0);
 	for(i=0;i<n;++i) assert(r[i]<m);
 	for(i=0;i<m;i++) ws[i]=0;
 	for(i=0;i<n;i++) ws[x[i]=r[i]]++;
