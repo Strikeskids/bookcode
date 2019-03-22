@@ -1,8 +1,11 @@
 const int MAXC = 26;
 
 struct node {
-	node *c[MAXC], *f, *m;
-	int depth, countat;
+	node *c[MAXC] = {}, *f = NULL, *m = NULL;
+	int depth = 0, countat = 0;
+
+	node() {}
+	node(int d) : depth(d) {}
 };
 
 // add a string to the trie
@@ -10,7 +13,7 @@ void add(node *n, char *s) {
 	int len = 0;
 	for (; s[len]; len++) {
 		int id = s[len]-'a';
-		if (!n->c[id]) { (n->c[id] = new node())->depth = len+1; }
+		if (!n->c[id]) { n->c[id] = new node(len+1); }
 		n = n->c[id];
 	}
 	n->countat++;

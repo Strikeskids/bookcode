@@ -1,6 +1,6 @@
 struct node {
-	node *c[2];
-	node *p;
+	node *c[2] = {};
+	node *p = {};
 
 	bool r() { return !p || (p->c[0] != this && p->c[1] != this); }
 	bool d() { return p && p->c[1] == this; }
