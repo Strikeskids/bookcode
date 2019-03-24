@@ -1,0 +1,95 @@
+Standard template library (sort, lower_bound, set, map, unique, etc.)
+Sort in O(n log n) time (not std::sort)
+Median value in linear time (not std::nth_element)
+Binary search (not std::lower_bound)
+Balanced binary search tree (any)
+Implicit key binary search tree (split + merge technique). For example: Cartesian tree (also known as a treap)
+Persistent binary search trees
+Sparse tables (static min\max in O(n log n)\O(1))
+Segment trees (dynamic min\max in O(n)\O(log n))
+Persistent segment trees
+Two-dimensional segment trees
+Binary heap
+Fibonacci heap
+Polynomial hashing (for example, fast substring comparison)
+Hash-tables
+Binary indexed tree (aka Fenwick tree)
+Multidimensional binary indexed tree
+Simple dynamic programming (dp on subtrees, masks, subsegments)
+Divide&conquer dynamic programming optimization
+Knuth's optimization (n pointers)
+Cormen's algorithm
+Convex-hull trick optimization
+Lowest Common Ancestor (LCA) problem. Jump pointer algorithm (binary jumps).
+LCA to RMQ
+RMQ in O(n)\O(1), four Russians technique
+Graphs. Finding any valid topology sort of directed acyclic graph (DAG)
+Finding a cycle in directed graph in linear time
+Euler tour of a general graph in linear time.
+Minimum spanning tree in directed graphs (arborescence).
+Dominator tree
+Linear time algorithm to find all bridges in undirected graph
+Linear time algorithm to find all articulation points
+Shortest paths in graphs. Dijkstra's algorithm
+Floyd algorithm
+Ford-Bellman algorithm
+Minimum spanning trees. Prim's algorithm
+Kruskal's algorithm
+Santa's algorithm
+Boruvka's algorithm
+Maximum matching in bipartite graphs (Kuhn's algorithm in O(VE) time)
+Finding maximum independent subset and minimum vertex cover in bipartite graph
+Dilworth's theorem
+Edmonds's algorithm to find maximum matching in general graph in O(VE) time
+Polynomial time algorithm to find minimum vertex cover in general graph.
+Flows. Ford-Fulkerson theorem
+Scaling technique for Ford-Fulkerson algorithm.
+Dinic's algorithm
+Dinic + scaling
+Preflow push algorithms (push&relabel)
+Minimum cost flows. Greedy algorithm that saturates shortest path.
+Minimum cost flows. Any polynomial time algorithm.
+Hungarian algorithm to solve assignment problem in O(n^3) time.
+Minimum weight matching in general graphs.
+Geometry. Basic operations (intersect two lines, intersect two circles, etc.)
+Convex-hull in O(n log n) time
+Two closest points on 2D plane in O(n log n) time
+Check whether given point lies inside convex polygon in O(n)\O(log n) time
+Check whether given point lies inside polygon (possibly non-convex) in O(n log n)\O(log^2 n) time
+Triangulation of a polygon in O(n^2) time
+Voronoi diagram\Delaunay triangulation in any polynomial time
+Voronoi diagram\Delaunay triangulation in O(n log n) time
+Minimum covering circle in O(n) time
+Strings. KMP, prefix-function, z-function
+Aho-Corasick algorithm
+Duval's algorithm to build Lyndon's decomposition in linear time
+Suffix array in O(n log n) time
+Suffix automaton in O(n) time
+Suffix tree in O(n) time
+Fast Fourier Transform
+Branch&bound heuristics to optimize backtracking
+Alpha-beta pruning
+Meet-in-the-middle. Knapsack problem in O(2^{n/2} n) time.
+Meet-in-the-middle. Maximum clique in O(2^{n/2} n) time.
+Gauss algorithm to solve system of linear equations
+Simplex-method
+Cut space and cycle space of undirected graph.
+Tutt's matrices.
+Scanline technique. Finding a point covered by maximum number of axis-parallel rectangles in O(n log n) time
+Scanline technique. Finding a pair of intersecting segments in O(n log n) time
+Sieve of Eratosthenes
+Any linear time sieve
+Pollard's rho algorithm
+Miller-Rabin primality test
+Euler function
+Fermat's little theorem
+Möbius function
+Binomial coefficients
+Catalan numbers
+Burnside's lemma
+Ternary search
+Annealing simulation algorithm
+Numerical integration, Simpon's rule
+Newton's method in optimization
+Finding a square root of n-digit number in O(n log^3 n) with Newton's method and FFT
+Internal representation of floating point numbers, rules of thumb to avoid precision loss
