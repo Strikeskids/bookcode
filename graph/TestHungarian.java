@@ -1,5 +1,7 @@
 import java.util.*;
 
+// http://www.cse.ust.hk/~golin/COMP572/Notes/Matching.pdf
+
 public class TestHungarian {
 	static final int CASES = 30;
 	static final int N = 1000;
