@@ -198,7 +198,7 @@ public class Geometry {
 			while (ch.size() >= 2 && ccw(ch.get(ch.size() - 2), ch.get(ch.size() - 1), p) > -eps) {
 				ch.remove(ch.size() - 1);
 			}
-			
+
 			ch.add(p);
 		}
 
@@ -223,6 +223,7 @@ public class Geometry {
 		}
 
 		// lh contains the lower hull here
+		Collections.reverse(lh);
 
 		for (Point p : lh) {
 			if (ch.get(0).equals(p) || ch.get(ch.size()-1).equals(p)) {
