@@ -20,3 +20,4 @@ hackpack-sources.tex:
 
 hackpack.pdf: hackpack.tex hackpack-sources.tex
 	pdflatex hackpack.tex
+	pdflatex hackpack.tex

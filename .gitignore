@@ -1,2 +1,7 @@
 hackpack-sources.tex
 *.class
+
+# Latex garbage
+*.toc
+*.aux
+*.log
